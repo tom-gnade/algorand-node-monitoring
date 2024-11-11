@@ -1,0 +1,20 @@
+FROM ubuntu:latest
+WORKDIR /etc/algomon/api-caller
+
+# Install only the needed packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    wget \
+    curl \
+    cron \
+    jq \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* >/proc/1/fd/1 2>/proc/1/fd/2
+
+# Install yq
+RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq >/proc/1/fd/1 2>/proc/1/fd/2
+
+# API caller cron job
+RUN echo '* * * * * bash /etc/algomon/api-caller/algonode-api-caller.sh >/proc/1/fd/1 2>/proc/1/fd/2' | crontab -
+
+CMD ["cron", "-f"]

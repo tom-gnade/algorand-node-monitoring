@@ -1,0 +1,6 @@
+- labels:
+    job: node-metrics
+    env: mainnet
+  targets:
+    - algomon-algonode:9100
+    - algomon-algonode:9101

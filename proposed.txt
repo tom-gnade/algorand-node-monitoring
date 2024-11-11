@@ -1,0 +1,153 @@
+services:
+
+  algomon-prometheus:
+    image: algomon/prom/prometheus:main
+    container_name: algomon-prometheus
+    hostname: algomon-prometheus
+    build: ./prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/metrics-sources.yaml:/etc/prometheus/metrics-sources.yaml:ro
+      - prometheus_data:/prometheus
+    healthcheck:
+      test: wget -qO- http://localhost:9090/-/healthy | grep -q "Healthy"
+      retries: 5
+      start_period: 15s
+      timeout: 10s
+    user: "nobody:nogroup"
+
+  algomon-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.23
+    container_name: algomon-elasticsearch
+    hostname: algomon-elasticsearch
+    build: ./elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+      - ./elasticsearch/elasticsearch.yaml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=elastic
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Helps with memory issues on different hosts
+    ulimits:  # Required for elasticsearch across platforms
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: curl -s http://localhost:9200/_cat/health | grep -q "green\|yellow"
+      retries: 5
+      start_period: 15s
+      timeout: 10s
+
+  algomon-api-caller:
+    image: ubuntu:latest
+    container_name: algomon-api-caller
+    hostname: algomon-api-caller
+    build: ./api-caller
+    restart: always
+    tty: true
+    depends_on:
+      algomon-elasticsearch:
+        condition: "service_healthy"
+    ports:
+      - "127.0.0.1:7833:7833"  # KMD port - localhost only
+    volumes:
+      - ./api-caller/startup.sh:/etc/algomon/api-caller/startup.sh:ro
+      - ./api-caller/algonode-api-origin.yaml:/etc/algomon/api-caller/algonode-api-origin.yaml:ro
+      - ./api-caller/algonode-api-endpoint.yaml:/etc/algomon/api-caller/algonode-api-endpoint.yaml:ro
+      - ./api-caller/algonode-api-caller.sh:/etc/algomon/api-caller/algonode-api-caller.sh:ro
+    healthcheck:
+      test: ps -o user,pid,start,cmd | grep -q "cron"
+      retries: 5
+      start_period: 15s
+      timeout: 10s
+
+  algomon-grafana:
+    image: algomon/grafana/grafana:latest
+    container_name: algomon-grafana
+    hostname: algomon-grafana
+    build: ./grafana
+    restart: always
+    depends_on:
+      algomon-prometheus:
+        condition: "service_healthy"
+      algomon-elasticsearch:
+        condition: "service_healthy"
+      algomon-api-caller:
+        condition: "service_healthy"
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./grafana/maps:/usr/share/grafana/public/maps:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=AlgoMon
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_USER=my-email-address@gmail.com
+      - GF_SMTP_PASSWORD=my-password
+      - GF_SMTP_FROM_ADDRESS=my-email-address@gmail.com
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_HIDE_VERSION=true
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_DISABLE_SIGNOUT_MENU=true
+      - GF_ENABLE_GZIP=true
+      - GF_USERS_DEFAULT_THEME=dark
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/algomon.json
+      - GF_INSTALL_PLUGINS=grafana-opensearch-datasource
+    healthcheck:
+      test: curl -s http://localhost:3000/api/health | grep -q "ok"
+      retries: 5
+      start_period: 15s
+      timeout: 10s
+
+  algomon-algonode:
+    image: algomon/algorand/algod:latest
+    container_name: algomon-algonode
+    hostname: algomon-algonode
+    build: ./algorand
+    restart: always
+    depends_on:
+      algomon-grafana:
+        condition: "service_healthy"
+    ports:
+      - "8080:8080"  # algod API
+      - "7833:7833"  # kmd API
+    volumes:
+      - algorand_data:/algod/data
+      - ./algorand/config.json:/etc/algorand/config.json:ro
+      - ./algorand/logging.config:/etc/algorand/logging.config:ro
+    environment:
+      - NETWORK=mainnet
+      - FAST_CATCHUP=1
+      - START_KMD=1
+      - TELEMETRY_NAME=algomon-algonode
+      - TOKEN=a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1
+      - ADMIN_TOKEN=a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1
+      - KMD_TOKEN=a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1
+    healthcheck:
+      test: curl -sw "%{response_code}\n" http://localhost:8080/health | grep -q "200"
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+volumes:
+  prometheus_data:
+  elasticsearch_data:
+  grafana_data:
+  algorand_data:

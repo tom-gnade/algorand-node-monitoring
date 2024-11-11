@@ -1,0 +1,8 @@
+FROM grafana/grafana:latest
+WORKDIR /etc/grafana/provisioning/
+
+RUN mkdir -p /var/lib/grafana/dashboards >/proc/1/fd/1 2>/proc/1/fd/2
+RUN mkdir -p /usr/share/grafana/public/maps >/proc/1/fd/1 2>/proc/1/fd/2
+
+COPY ./datasource-manifest.yaml ./datasources/default.yaml
+COPY ./dashboard-provider.yaml ./dashboards/default.yaml

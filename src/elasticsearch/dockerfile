@@ -1,0 +1,7 @@
+FROM docker.elastic.co/elasticsearch/elasticsearch:6.8.23
+
+WORKDIR /usr/share/elasticsearch/config/
+
+COPY setup-es.sh /setup-es.sh
+RUN chmod +x /setup-es.sh && \
+   chown elasticsearch:elasticsearch /setup-es.sh

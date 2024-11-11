@@ -1,0 +1,32 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+#    - static_configs:
+#        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  - job_name: prometheus-metrics
+    static_configs:
+      - targets: ['algomon-prometheus:9090']
+  - job_name: node-metrics
+    honor_labels: true
+    file_sd_configs:
+    - files:
+      - metrics-sources.yaml
+    # relabel_configs:
+      # - source_labels: [__address__]
+        # target_label: instance
+        # regex: '([^:]+)(:[0-9]+)?'
+        # replacement: '${1}'
