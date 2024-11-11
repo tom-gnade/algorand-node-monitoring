@@ -110,9 +110,21 @@ Linux:
 sudo ./setup-permissions-linux.sh
 ```
 
-Windows CMD/PowerShell (run as Administrator):
+Windows CMD/PowerShell (run one of these as Administrator):
 ```cmd
 setup-permissions-windows.bat
+'''
+or
+'''.\setup-permissions-windows.ps1
+'''
+
+Windows CMD/PowerShell (run one of these as Administrator):
+```cmd
+setup-permissions-windows.bat
+```
+or
+```powershell
+.\setup-permissions-windows.ps1
 ```
 
 macOS:
