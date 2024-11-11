@@ -14,8 +14,10 @@ The Docker install has been tested on Ubuntu 23.10. It should run on any operati
 Happy node running!
 
 ## Install
+create a target folder on your disk, and navigate to that location
 install docker compose
-clone git repository to taret folder
+clone git repository to taret folder:
+   curl -L https://api.github.com/repos/tom-gnade/algorand-node-monitoring/tarball/main | tar xz --wildcards --strip=2 "*/src"
 assign permissions to specific folders for container persistent storage
    In Linux:
       sudo chown -R 1000:1000 ./elasticsearch/data
