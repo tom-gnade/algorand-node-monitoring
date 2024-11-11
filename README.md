@@ -13,6 +13,22 @@ The Docker install has been tested on Ubuntu 23.10. It should run on any operati
 
 Happy node running!
 
+## Install
+install docker compose
+clone git repository to taret folder
+assign permissions to specific folders for container persistent storage
+   In Linux:
+      sudo chown -R 1000:1000 ./elasticsearch/data
+      chown -R 65534:65534 ./prometheus/data
+      chown -R 472:472 ./grafana
+   In Windows:
+      PowerShell to assign permissions?
+   In MacOS:
+      Not tested.
+docker compose build in root folder with compose.yaml
+docker compose up -d to run containers
+
+
 ## Key Components
 
 This solution is a monitoring and analytics stack for Algorand nodes, called "AlgoMon". Here's the key components:
