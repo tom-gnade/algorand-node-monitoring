@@ -1,0 +1,41 @@
+# Data directories (mounted as volumes)
+**/data/
+elasticsearch/data/
+prometheus/data/
+grafana/data/
+algorand/data/
+
+# Version control
+.git
+.gitignore
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Docker files (no need to copy into images)
+**/Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+
+# Permission scripts (only needed on host)
+setup-permissions-*.sh
+setup-permissions-*.bat
+setup-permissions-*.ps1
+
+# Documentation
+*.md
+docs/
+
+# Logs
+**/*.log
+
+# Environment/config files
+.env
+*.env
