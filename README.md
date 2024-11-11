@@ -100,9 +100,9 @@ docker compose up -d
 
 ## Documentation
 
-- [Installation Guide](docs/INSTALL.md) - Detailed installation and configuration instructions
-- [Configuration Guide](docs/CONFIG.md) - Advanced configuration options
-- [Architecture](docs/ARCHITECTURE.md) - System architecture and component details
+- [Installation Guide](docs/install.md) - Detailed installation and configuration instructions
+- [Configuration Guide](docs/config.md) - Advanced configuration options
+- [Architecture](docs/architecture.md) - System architecture and component details
 
 ## Contributing
 
