@@ -52,6 +52,12 @@ These design choices allow AlgoMon to provide a consistent experience whether yo
 - Administrative/sudo access
 - tar (Windows users may need to install this separately)
 
+### Additional Notes
+- Windows/macOS users need Docker Desktop installed
+- Elasticsearch requires minimum 4GB RAM allocation in Docker
+- Storage requirements grow with network usage (~1GB/day for mainnet)
+- Windows users: tar utility required (installed via Git Bash or similar)
+
 ## Installation Steps
 
 ### 1. Create Installation Directory

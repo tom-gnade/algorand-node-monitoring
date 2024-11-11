@@ -13,13 +13,14 @@ AlgoMon is an integrated monitoring solution for Algorand nodes that combines Pr
 ## System Requirements
 
 - Docker and Docker Compose
-- 8GB RAM minimum
-- 50GB SSD storage minimum for mainnet node (SSD strongly recommended for performance)
+- Docker Desktop (Windows/macOS)
+- 8GB RAM minimum 
+- 50GB storage minimum (SSD strongly recommended)
 - Available ports:
   - 3000 (Grafana)
   - 9090 (Prometheus)
   - 9200 (Elasticsearch)
-  - 8080 (Algorand node API)
+  - 8080 (Algorand API)
   - 7833 (Algorand KMD API)
 
 ## Quick Start
@@ -103,6 +104,7 @@ docker compose up -d
 - [Installation Guide](docs/install.md) - Detailed installation and configuration instructions
 - [Configuration Guide](docs/config.md) - Advanced configuration options
 - [Architecture](docs/architecture.md) - System architecture and component details
+- [Algorand Node Documentation](https://developer.algorand.org/docs/run-a-node/setup/types)
 
 ## Contributing
 
