@@ -1,11 +1,3 @@
-# Data directories - never commit these
-**/data/
-**/data/*
-algorand/data/
-elasticsearch/data/
-grafana/data/
-prometheus/data/
-
 # Log files
 *.log
 
