@@ -1,0 +1,50 @@
+# Example customizations for AlgoMon
+# To use:
+# 1. Copy this file to compose.override.yaml
+# 2. Uncomment and modify the settings you want to change
+# 3. Your changes will override the base configuration
+
+services:
+  algomon-grafana:
+    # environment:
+      # Override default admin password
+      # - GF_SECURITY_ADMIN_PASSWORD=MyCustomPassword
+      
+      # Configure email notifications
+      # - GF_SMTP_ENABLED=true
+      # - GF_SMTP_HOST=smtp.gmail.com:587
+      # - GF_SMTP_USER=my-email@gmail.com
+      # - GF_SMTP_PASSWORD=my-app-specific-password
+      # - GF_SMTP_FROM_ADDRESS=my-email@gmail.com
+      
+      # Change theme
+      # - GF_USERS_DEFAULT_THEME=light
+
+    # ports:
+      # Use different port
+      # - "13000:3000"
+
+  algomon-elasticsearch:
+    # environment:
+      # Adjust memory limits
+      # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Adjust password if needed
+      # - ELASTIC_PASSWORD=my-custom-password
+
+  algomon-prometheus:
+    # ports:
+      # Use different port
+      # - "19090:9090"
+
+  algomon-algonode:
+    # environment:
+      # Change network
+      # - NETWORK=testnet
+      # Disable fast catchup
+      # - FAST_CATCHUP=0
+      # Custom telemetry name
+      # - TELEMETRY_NAME=my-custom-node-name
+      # Custom API tokens
+      # - TOKEN=your-custom-token
+      # - ADMIN_TOKEN=your-custom-admin-token
+      # - KMD_TOKEN=your-custom-kmd-token
