@@ -92,7 +92,7 @@ done
 ```
 
 ## Service Ports
-
+    
 | Service | Port |
 |---------|------|
 | Algorand API | 8080 |
