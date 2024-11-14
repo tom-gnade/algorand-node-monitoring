@@ -8,7 +8,7 @@ Quick reference guide for checking the health of each service in the Algorand mo
 docker exec algomon-algonode goal node status -d /var/lib/algorand
 
 # API status with fixed token
-curl -s -H "X-Algo-API-Token: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+curl -s -H "X-Algo-API-Token: a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1" \
     http://localhost:8080/v2/status | jq
 
 # Recent logs
